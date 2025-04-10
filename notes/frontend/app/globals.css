@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap');
+
+body {
+  background-color: #F6F0E3; 
+  background-image: 
+  linear-gradient(#C7D5DA .15em, transparent .1em);
+  background-size: 100% 2.5em;
+  
+}
+
+.nunito {
+  font-family: var(--font-nunito);
+  font-weight: 400;
+}
+
+.nunito-bold {
+  font-family: var(--font-nunito);
+  font-weight: 700;
+}
+
+.sans{
+  font-family: var(--font-sans);
+}
