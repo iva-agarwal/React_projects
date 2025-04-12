@@ -46,7 +46,7 @@ const page = () => {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/notes")
+    fetch("http://localhost:8000/notes")
       .then((res) => res.json())
       .then((data) => setNotes(data))
       .catch((err) => console.error("Failed to load notes", err));
@@ -61,7 +61,7 @@ const page = () => {
     e.preventDefault();
     setLoading(true);
 
-    fetch("http://localhost:5000/notes", {
+    fetch("http://localhost:8000/notes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +81,7 @@ const page = () => {
   };
 
   const handleDelete = (noteId) => {
-    fetch(`http://localhost:5000/note/${noteId}`, {
+    fetch(`http://localhost:8000/note/${noteId}`, {
       method: "DELETE",
     }).then(() => {
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
@@ -94,7 +94,7 @@ const page = () => {
 
   const handleSaveEdit = () => {
     setLoading(true);
-    fetch(`http://localhost:5000/note/${editingNote.id}`, {
+    fetch(`http://localhost:8000/note/${editingNote.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

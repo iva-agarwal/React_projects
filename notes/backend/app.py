@@ -1,53 +1,67 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List
 
-app=Flask(__name__)
-CORS(app)
+app = FastAPI()
 
-notes=[]
-note_id=1
+# Allow CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change this to specific origins in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.route('/notes',methods=['GET'])
+# Define the model for note using Pydantic
+class Note(BaseModel):
+    title: str
+    content: str
+
+class NoteResponse(Note):
+    id: int
+
+# In-memory database substitute
+notes: List[dict] = []
+note_id = 1
+
+# Routes
+
+@app.get("/notes", response_model=List[NoteResponse])
 def get_notes():
-    return jsonify(notes)
+    return notes
 
-@app.route('/notes/<int:id>', methods=['GET'])
-def get_note(id):
-    note = next((note for note in notes if note['id']==id), None)
+@app.get("/notes/{id}", response_model=NoteResponse)
+def get_note(id: int):
+    note = next((n for n in notes if n["id"] == id), None)
     if note:
-        return jsonify(note)
-    return jsonify({"error":"note not found"}), 404
+        return note
+    raise HTTPException(status_code=404, detail="Note not found")
 
-@app.route('/notes', methods=['POST'])
-def create_note():
+@app.post("/notes", response_model=NoteResponse, status_code=201)
+def create_note(note: Note):
     global note_id
-    data= request.get_json()
-    note={
-        'id':note_id,
-        'title':data.get('title'),
-        'content':data.get('content')
+    new_note = {
+        "id": note_id,
+        "title": note.title,
+        "content": note.content
     }
-    notes.append(note)
+    notes.append(new_note)
     note_id += 1
-    return jsonify(note), 201
+    return new_note
 
-@app.route('/note/<int:id>', methods=['PUT'])
-def update_note(id):
-    data = request.get_json()
-    
+@app.put("/note/{id}", response_model=NoteResponse)
+def update_note(id: int, updated_note: Note):
     for note in notes:
-        if note['id']==id:
-            note['title']=data.get('title', note['title'])
-            note['content']= data.get('content', note['content'])
-            return jsonify(note)
-    return jsonify({'error':'note not found'}), 404
+        if note["id"] == id:
+            note["title"] = updated_note.title
+            note["content"] = updated_note.content
+            return note
+    raise HTTPException(status_code=404, detail="Note not found")
 
-@app.route('/note/<int:id>', methods=['DELETE'])
-def del_note(id):  
+@app.delete("/note/{id}")
+def delete_note(id: int):
     global notes
-    notes = [note for note in notes if note['id'] != id]  
-    return jsonify({"message": "Note deleted"}), 200  
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    notes = [note for note in notes if note["id"] != id]
+    return {"message": "Note deleted"}
