@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { SearchBar } from "../components/SearchBar";
 
 const Page = () => {
   const [posts, setPosts] = useState([]);
@@ -54,18 +55,14 @@ const Page = () => {
   };
 
   return (
-    <div className="bg-[#FFEFD7] min-h-screen text-black p-10">
+    <div className="bg-[#FFEFD7] min-h-screen text-black ">
+      <SearchBar/>
       <div className=" mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Recent Posts</h1>
-        
-        </div>
-
-
+      
         {posts.length === 0 ? (
           <p className="text-center">No posts available.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-10">
               <form
             onSubmit={handleCreatePost}
             className="p-6 border-b-2 border-black "
