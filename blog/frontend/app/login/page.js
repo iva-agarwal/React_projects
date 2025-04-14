@@ -29,7 +29,7 @@ const page = () => {
   };
 
   return (
-    <div className="bg-[#F2E5DC] min-h-screen text-black p-10 flex justify-center items-center">
+    <div className="bg-[#FFEFD7] min-h-screen text-black p-10 flex justify-center items-center">
       <div className=" border-2 border-black h-full">
         <div className="flex flex-col md:flex-row justify-center">
           {/* Left Side */}
