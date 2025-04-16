@@ -32,3 +32,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
 @router.post("/login")
 def login(user: schemas.LoginRequest, db: Session = Depends(database.get_db)):
     return auth.login_user(user.email, user.password, db)
+
+@router.get("/users/me", response_model=schemas.UserResponse)
+def get_current_user_info(current_user: models.User = Depends(auth.get_current_user)):
+    return current_user
