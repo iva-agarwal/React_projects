@@ -12,7 +12,8 @@ class User(Base):
     email = Column(String, unique=True, index= True, nullable=False)
     password = Column( String, nullable=False)
     created_at = Column(DateTime , default=datetime.utcnow)
-
+    username = Column(String, unique=True, nullable=False) 
+    user_image = Column(String, nullable=True) 
     posts = relationship("Post" , back_populates="author")
 
 class Post(Base):

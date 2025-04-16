@@ -2,12 +2,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { SearchBar } from "../components/SearchBar";
+import useAuthRedirect from "@/hooks/useAuthRedirect";
 
 const Page = () => {
   const [posts, setPosts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+
+  useAuthRedirect();
 
   const fetchPosts = async () => {
     const token = localStorage.getItem("token");
@@ -17,7 +20,7 @@ const Page = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setPosts(res.data);
+      setPosts(res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
@@ -27,6 +30,16 @@ const Page = () => {
     fetchPosts();
   }, []);
 
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+  
   const handleCreatePost = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -94,15 +107,16 @@ const Page = () => {
                 key={post.id}
                 className="border-b-2 border-black p-6 "
               >
-                <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+                <h2 className="text-xl font-semibold mb-2 flex flex-col">{post.title}</h2>
                 <p className="text-gray-700">{post.content}</p>
+                <p className="text-gray-600 text-sm pt-4 ">{formatDate(post.created_at)}</p>
               </div>
             ))}
           </div>
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export default Page;

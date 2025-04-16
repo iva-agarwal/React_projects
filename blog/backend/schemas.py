@@ -5,15 +5,22 @@ from typing import List, Optional
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    username: str
+    user_image: Optional[str] = None  
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
 
 class UserResponse(BaseModel):
     id: str
     email: EmailStr
+    username: str
+    user_image: Optional[str]
     created_at: datetime
 
     class Config:
         orm_mode = True
-
 
 class PostCreate(BaseModel):
     title: str

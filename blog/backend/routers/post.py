@@ -20,7 +20,8 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(database.get_db)
 
 @router.get("/", response_model=List[schemas.PostResponse])
 def get_all_posts(db: Session = Depends(database.get_db)):
-    return db.query(models.Post).all()
+    posts = db.query(models.Post).order_by(models.Post.created_at.desc()).all()
+    return posts
 
 @router.get("/{post_id}", response_model=schemas.PostResponse)
 def get_post(post_id: str, db: Session = Depends(database.get_db)):

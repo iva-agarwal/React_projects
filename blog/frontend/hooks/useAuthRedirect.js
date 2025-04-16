@@ -1,19 +1,18 @@
-// app/page.js
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function useAuthRedirect() {
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       router.replace("/login");
     } else {
-      router.replace("/posts"); 
+      // Optionally: Validate token by hitting an auth endpoint
+      // If invalid, remove token and redirect
     }
   }, [router]);
-
-  return null; 
 }
