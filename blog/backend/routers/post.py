@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 import models, schemas, database
-from auth import get_current_user  # adjust if your auth file is elsewhere
+from auth import get_current_user 
+from database import get_db
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
@@ -55,3 +56,10 @@ def delete_post(post_id: str, db: Session = Depends(database.get_db), current_us
     db.delete(post)
     db.commit()
     return
+
+@router.get("/user/{user_id}", response_model=List[schemas.PostResponse])
+def get_posts_by_user(user_id: str, db: Session = Depends(get_db)):
+    posts = db.query(models.Post).filter(models.Post.user_id == user_id).all()
+    if not posts:
+        raise HTTPException(status_code=404, detail="No posts found for this user")
+    return posts
