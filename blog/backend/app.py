@@ -3,8 +3,11 @@ from database import engine
 import models
 from routers import auth, post
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # Allow CORS for your frontend
 app.add_middleware(
