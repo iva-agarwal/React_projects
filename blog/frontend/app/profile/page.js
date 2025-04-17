@@ -172,7 +172,7 @@ const ProfilePage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((post) => (
-            <div key={post.id} className="border-2 border-black p-4 bg-white">
+            <div key={post.id} className="border-2 border-black p-4">
               <h4 className="text-lg font-bold">{post.title}</h4>
               <p className="text-gray-800 mt-2">{post.content}</p>
               <p className="text-sm text-gray-500 mt-4">
