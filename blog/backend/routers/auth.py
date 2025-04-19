@@ -70,3 +70,24 @@ def update_user(
     db.commit()
     db.refresh(current_user)
     return current_user
+
+@router.get("/users/search")
+def search_users(query: str, db: Session = Depends(get_db)):
+    users = db.query(models.User)\
+              .filter(models.User.username.ilike(f"%{query}%"))\
+              .all()
+    return [
+        {
+            "id": str(user.id),
+            "username": user.username,
+            "user_image": user.user_image
+        }
+        for user in users
+    ]
+
+@router.get("/users/{user_id}", response_model=schemas.UserResponse)
+def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
